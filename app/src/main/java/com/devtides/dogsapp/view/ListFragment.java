@@ -48,7 +48,8 @@ public class ListFragment extends Fragment {
     }
 
     private void onGoToDetails() {
-        NavDirections action = ListFragmentDirections.actionListFragmentToDetailFragment();
+        NavDirections action = ListFragmentDirections.actionListFragmentToDetailFragment()
+                .setDogUuid(8);
         Navigation.findNavController(fab).navigate(action);
     }
 
