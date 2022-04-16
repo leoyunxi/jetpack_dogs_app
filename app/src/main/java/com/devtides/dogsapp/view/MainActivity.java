@@ -1,8 +1,10 @@
-package com.devtides.dogsapp;
+package com.devtides.dogsapp.view;
 
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.os.Bundle;
+
+import com.devtides.dogsapp.R;
 
 public class MainActivity extends AppCompatActivity {
 
