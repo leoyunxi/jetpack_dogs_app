@@ -22,12 +22,6 @@ import butterknife.ButterKnife;
 
 public class DetailFragment extends Fragment {
 
-    @BindView(R.id.floatingActionButtonToList)
-    FloatingActionButton fab;
-
-    @BindView(R.id.tvDetailFragment)
-    TextView tv;
-
     private int dogUuid;
 
     public DetailFragment() {
@@ -52,14 +46,6 @@ public class DetailFragment extends Fragment {
         super.onViewCreated(view, savedInstanceState);
         if (getArguments() != null) {
             dogUuid = DetailFragmentArgs.fromBundle(getArguments()).getDogUuid();
-            tv.setText(String.valueOf(dogUuid));
         }
-
-        fab.setOnClickListener(v -> onGoToList());
-    }
-
-    private void onGoToList(){
-        NavDirections action = DetailFragmentDirections.actionDetailFragmentToListFragment();
-        Navigation.findNavController(fab).navigate(action);
     }
 }
