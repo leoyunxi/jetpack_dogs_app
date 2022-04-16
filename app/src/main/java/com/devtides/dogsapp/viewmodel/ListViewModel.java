@@ -7,13 +7,22 @@ import androidx.lifecycle.AndroidViewModel;
 import androidx.lifecycle.MutableLiveData;
 
 import com.devtides.dogsapp.model.DogBreed;
+import com.devtides.dogsapp.model.DogsApiService;
 
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 
+import io.reactivex.android.schedulers.AndroidSchedulers;
+import io.reactivex.disposables.CompositeDisposable;
+import io.reactivex.observers.DisposableSingleObserver;
+import io.reactivex.schedulers.Schedulers;
+
 public class ListViewModel extends AndroidViewModel {
+
+    private DogsApiService apiService = new DogsApiService();
+    private CompositeDisposable disposable = new CompositeDisposable();
 
     public MutableLiveData<List<DogBreed>> dogs = new MutableLiveData<>();
     public MutableLiveData<Boolean> hasError = new MutableLiveData<>();
@@ -24,10 +33,41 @@ public class ListViewModel extends AndroidViewModel {
     }
 
     public void refresh() {
+        fetchFromRemote();
+    }
+
+    private void fetchFromRemote() {
+        isLoading.setValue(true);
+        disposable.add(
+                apiService.getDogs()
+                        .subscribeOn(Schedulers.newThread())
+                        .observeOn(AndroidSchedulers.mainThread())
+                        .subscribeWith(new DisposableSingleObserver<List<DogBreed>>() {
+                            @Override
+                            public void onSuccess(List<DogBreed> dogBreeds) {
+                                dogs.setValue(dogBreeds);
+                                hasError.setValue(false);
+                                isLoading.setValue(false);
+                            }
+
+                            @Override
+                            public void onError(Throwable e) {
+                                hasError.setValue(true);
+                                isLoading.setValue(false);
+                                e.printStackTrace();
+                            }
+                        })
+        );
+    }
+
+    @Override
+    protected void onCleared() {
+        super.onCleared();
+        disposable.clear();
+    }
+
+    private void getDummyData() {
         DogBreed dog1 = new DogBreed("1", "corgi", "15", "", "", "", "");
-        DogBreed dog2 = new DogBreed("2", "rotwailler", "10", "", "", "", "");
-        DogBreed dog3 = new DogBreed("3", "labrador", "13", "", "", "", "");
-//        ArrayList<DogBreed> list = new ArrayList<>(Arrays.asList(dog1, dog2, dog3));
         ArrayList<DogBreed> list = new ArrayList<>(Collections.nCopies(8, dog1));
 
         dogs.setValue(list);
