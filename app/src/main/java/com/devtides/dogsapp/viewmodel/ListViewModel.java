@@ -12,6 +12,7 @@ import com.devtides.dogsapp.model.DogBreed;
 import com.devtides.dogsapp.model.DogDao;
 import com.devtides.dogsapp.model.DogDatabase;
 import com.devtides.dogsapp.model.DogsApiService;
+import com.devtides.dogsapp.util.SharedPreferencesHelper;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -33,12 +34,35 @@ public class ListViewModel extends AndroidViewModel {
     private AsyncTask<List<DogBreed>, Void, List<DogBreed>> insertTask;
     private AsyncTask<Void, Void, List<DogBreed>> retrieveTask;
 
+    private SharedPreferencesHelper prefHelper = SharedPreferencesHelper.getInstance(getApplication());
+    private long refreshTime = 5 * 60 * 1000 * 1000 * 1000L;
+
     public ListViewModel(@NonNull Application application) {
         super(application);
     }
 
     public void refresh() {
-        fetchFromDatabase();
+        checkCacheDuration();
+        long updateTime = prefHelper.getUpdateTime();
+        long currentTime = System.nanoTime();
+        if(updateTime != 0 && currentTime - updateTime < refreshTime) {
+            fetchFromDatabase();
+        } else {
+            fetchFromRemote();
+        }
+    }
+
+    private void checkCacheDuration() {
+        String cachePreference = prefHelper.getCacheDuration();
+
+        if(!cachePreference.equals("")) {
+            try {
+                int cachePreferenceInt = Integer.parseInt(cachePreference);
+                refreshTime = cachePreferenceInt * 1000 * 1000 * 1000L;
+            } catch (NumberFormatException e) {
+                e.printStackTrace();
+            }
+        }
     }
 
     private void fetchFromDatabase() {
@@ -119,6 +143,7 @@ public class ListViewModel extends AndroidViewModel {
         @Override
         protected void onPostExecute(List<DogBreed> dogBreeds) {
             dogsRetrieved(dogBreeds);
+            prefHelper.saveUpdateTime(System.nanoTime());
         }
     }
 
