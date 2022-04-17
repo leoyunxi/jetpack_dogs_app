@@ -19,6 +19,7 @@ import android.widget.TextView;
 
 import com.devtides.dogsapp.R;
 import com.devtides.dogsapp.model.DogBreed;
+import com.devtides.dogsapp.util.Utils;
 import com.devtides.dogsapp.viewmodel.DetailViewModel;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
@@ -67,7 +68,7 @@ public class DetailFragment extends Fragment {
         }
 
         viewModel = ViewModelProviders.of(this).get(DetailViewModel.class);
-        viewModel.fetch(0);
+        viewModel.fetch(dogUuid);
 
         observeViewModel();
     }
@@ -79,6 +80,7 @@ public class DetailFragment extends Fragment {
                 dogLifespan.setText(dogs.lifeSpan);
                 dogPurpose.setText(dogs.bredFor);
                 dogTemperament.setText(dogs.temperament);
+                Utils.loadImage(dogImage,dogs.imageUrl,Utils.getProgressDrawable(dogImage.getContext()));
             }
         });
     }
