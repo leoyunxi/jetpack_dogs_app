@@ -31,13 +31,20 @@ public class ListViewModel extends AndroidViewModel {
     public MutableLiveData<Boolean> hasError = new MutableLiveData<>();
     public MutableLiveData<Boolean> isLoading = new MutableLiveData<>();
     private AsyncTask<List<DogBreed>, Void, List<DogBreed>> insertTask;
+    private AsyncTask<Void, Void, List<DogBreed>> retrieveTask;
 
     public ListViewModel(@NonNull Application application) {
         super(application);
     }
 
     public void refresh() {
-        fetchFromRemote();
+        fetchFromDatabase();
+    }
+
+    private void fetchFromDatabase() {
+        isLoading.setValue(true);
+        retrieveTask = new RetrieveDogsTask();
+        retrieveTask.execute();
     }
 
     private void fetchFromRemote() {
@@ -68,6 +75,16 @@ public class ListViewModel extends AndroidViewModel {
     protected void onCleared() {
         super.onCleared();
         disposable.clear();
+
+        if(insertTask != null) {
+            insertTask.cancel(true);
+            insertTask = null;
+        }
+
+        if(retrieveTask != null) {
+            retrieveTask.cancel(true);
+            retrieveTask = null;
+        }
     }
 
     private void getDummyData() {
@@ -109,5 +126,19 @@ public class ListViewModel extends AndroidViewModel {
         dogs.setValue(dogList);
         hasError.setValue(false);
         isLoading.setValue(false);
+    }
+
+    private class RetrieveDogsTask extends AsyncTask<Void, Void, List<DogBreed>> {
+
+        @Override
+        protected List<DogBreed> doInBackground(Void... voids) {
+            return DogDatabase.getInstance(getApplication()).dogDao().getAllDogs();
+        }
+
+        @Override
+        protected void onPostExecute(List<DogBreed> dogBreeds) {
+            dogsRetrieved(dogBreeds);
+            Toast.makeText(getApplication(), "Dogs retrieved from database", Toast.LENGTH_SHORT).show();
+        }
     }
 }
