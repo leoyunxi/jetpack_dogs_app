@@ -22,12 +22,20 @@ import com.devtides.dogsapp.util.Utils;
 import java.util.ArrayList;
 import java.util.List;
 
-public class DogsListAdapter extends RecyclerView.Adapter<DogsListAdapter.DogViewHolder>  {
+public class DogsListAdapter extends RecyclerView.Adapter<DogsListAdapter.DogViewHolder> implements DogClickListener {
 
     private ArrayList<DogBreed> dogsList;
 
     public DogsListAdapter(ArrayList<DogBreed> dogsList) {
         this.dogsList = dogsList;
+    }
+
+    @Override
+    public void onDogClicked(View v) {
+        String uuid = ((TextView) v.findViewById(R.id.clickedDogId)).getText().toString();
+        ListFragmentDirections.ActionListFragmentToDetailFragment action = ListFragmentDirections.actionListFragmentToDetailFragment();
+        action.setDogUuid(Integer.valueOf(uuid));
+        Navigation.findNavController(v).navigate(action);
     }
 
     public void updateDogsList(List<DogBreed> newDogsList) {
@@ -47,19 +55,7 @@ public class DogsListAdapter extends RecyclerView.Adapter<DogsListAdapter.DogVie
     @Override
     public void onBindViewHolder(@NonNull DogViewHolder holder, int position) {
         holder.itemView.setDog(dogsList.get(position));
-//        ImageView image = holder.itemView.findViewById(R.id.imageView);
-//        TextView name = holder.itemView.findViewById(R.id.name);
-//        TextView lifespan = holder.itemView.findViewById(R.id.lifespan);
-//        LinearLayout linearLayout = holder.itemView.findViewById(R.id.detailLayout);
-//
-//        name.setText(dogsList.get(position).dogBreed);
-//        lifespan.setText(dogsList.get(position).lifeSpan);
-//        Utils.loadImage(image,dogsList.get(position).imageUrl,Utils.getProgressDrawable(image.getContext()));
-//        linearLayout.setOnClickListener(view -> {
-//            ListFragmentDirections.ActionListFragmentToDetailFragment action =  ListFragmentDirections.actionListFragmentToDetailFragment();
-//            action.setDogUuid(dogsList.get(position).uuid);
-//            Navigation.findNavController(linearLayout).navigate(action);
-//        });
+        holder.itemView.setListener(this);
     }
 
     @Override

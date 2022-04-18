@@ -5,12 +5,23 @@
         <variable
             name="dog"
             type="com.devtides.dogsapp.model.DogBreed" />
+        <variable
+            name="listener"
+            type="com.devtides.dogsapp.view.DogClickListener" />
     </data>
 
     <LinearLayout xmlns:app="http://schemas.android.com/apk/res-auto"
         android:id="@+id/detailLayout"
+        android:onClick="@{listener::onDogClicked}"
         android:layout_width="match_parent"
         android:layout_height="125dp">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/clickedDogId"
+            android:text="@{String.valueOf(dog.uuid)}"
+            android:visibility="gone" />
 
         <ImageView
             android:id="@+id/imageView"
