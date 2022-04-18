@@ -67,9 +67,9 @@ public class DogsListAdapter extends RecyclerView.Adapter<DogsListAdapter.DogVie
 
         public DogItemBinding itemView;
 
-        public DogViewHolder(@NonNull DogItemBinding itemView) {
-            super(itemView.getRoot());
-            this.itemView = itemView;
+        public DogViewHolder(@NonNull DogItemBinding dogItemBinding) {
+            super(dogItemBinding.getRoot());
+            this.itemView = dogItemBinding;
         }
     }
 }
