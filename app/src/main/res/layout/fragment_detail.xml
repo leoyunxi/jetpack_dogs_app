@@ -5,6 +5,9 @@
         <variable
             name="dog"
             type="com.devtides.dogsapp.model.DogBreed" />
+        <variable
+            name="palette"
+            type="com.devtides.dogsapp.model.DogPalette" />
     </data>
 
     <RelativeLayout xmlns:app="http://schemas.android.com/apk/res-auto"
@@ -12,6 +15,7 @@
         android:id="@+id/frameLayout2"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:background="@{palette.color}"
         tools:context=".view.DetailFragment">
 
         <ImageView
