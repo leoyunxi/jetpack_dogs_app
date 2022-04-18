@@ -8,11 +8,14 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
+import androidx.databinding.DataBindingUtil;
+import androidx.databinding.ViewDataBinding;
 import androidx.navigation.NavAction;
 import androidx.navigation.Navigation;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.devtides.dogsapp.R;
+import com.devtides.dogsapp.databinding.DogItemBinding;
 import com.devtides.dogsapp.model.DogBreed;
 import com.devtides.dogsapp.util.Utils;
 
@@ -36,25 +39,27 @@ public class DogsListAdapter extends RecyclerView.Adapter<DogsListAdapter.DogVie
     @NonNull
     @Override
     public DogViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.dog_item, parent, false);
+        LayoutInflater inflater = LayoutInflater.from(parent.getContext());
+        DogItemBinding view = DataBindingUtil.inflate(inflater, R.layout.dog_item, parent, false);
         return new DogViewHolder(view);
     }
 
     @Override
     public void onBindViewHolder(@NonNull DogViewHolder holder, int position) {
-        ImageView image = holder.itemView.findViewById(R.id.imageView);
-        TextView name = holder.itemView.findViewById(R.id.name);
-        TextView lifespan = holder.itemView.findViewById(R.id.lifespan);
-        LinearLayout linearLayout = holder.itemView.findViewById(R.id.detailLayout);
-
-        name.setText(dogsList.get(position).dogBreed);
-        lifespan.setText(dogsList.get(position).lifeSpan);
-        Utils.loadImage(image,dogsList.get(position).imageUrl,Utils.getProgressDrawable(image.getContext()));
-        linearLayout.setOnClickListener(view -> {
-            ListFragmentDirections.ActionListFragmentToDetailFragment action =  ListFragmentDirections.actionListFragmentToDetailFragment();
-            action.setDogUuid(dogsList.get(position).uuid);
-            Navigation.findNavController(linearLayout).navigate(action);
-        });
+        holder.itemView.setDog(dogsList.get(position));
+//        ImageView image = holder.itemView.findViewById(R.id.imageView);
+//        TextView name = holder.itemView.findViewById(R.id.name);
+//        TextView lifespan = holder.itemView.findViewById(R.id.lifespan);
+//        LinearLayout linearLayout = holder.itemView.findViewById(R.id.detailLayout);
+//
+//        name.setText(dogsList.get(position).dogBreed);
+//        lifespan.setText(dogsList.get(position).lifeSpan);
+//        Utils.loadImage(image,dogsList.get(position).imageUrl,Utils.getProgressDrawable(image.getContext()));
+//        linearLayout.setOnClickListener(view -> {
+//            ListFragmentDirections.ActionListFragmentToDetailFragment action =  ListFragmentDirections.actionListFragmentToDetailFragment();
+//            action.setDogUuid(dogsList.get(position).uuid);
+//            Navigation.findNavController(linearLayout).navigate(action);
+//        });
     }
 
     @Override
@@ -64,10 +69,10 @@ public class DogsListAdapter extends RecyclerView.Adapter<DogsListAdapter.DogVie
 
     class DogViewHolder extends RecyclerView.ViewHolder {
 
-        public View itemView;
+        public DogItemBinding itemView;
 
-        public DogViewHolder(@NonNull View itemView) {
-            super(itemView);
+        public DogViewHolder(@NonNull DogItemBinding itemView) {
+            super(itemView.getRoot());
             this.itemView = itemView;
         }
     }
