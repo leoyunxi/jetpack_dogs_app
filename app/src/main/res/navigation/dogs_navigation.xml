@@ -13,6 +13,9 @@
         <action
             android:id="@+id/action_listFragment_to_detailFragment"
             app:destination="@id/detailFragment" />
+        <action
+            android:id="@+id/actionSettings"
+            app:destination="@id/settingsFragment" />
     </fragment>
     <fragment
         android:id="@+id/detailFragment"
@@ -29,4 +32,8 @@
             app:argType="integer"
             android:defaultValue="0" />
     </fragment>
+    <fragment
+        android:id="@+id/settingsFragment"
+        android:name="com.devtides.dogsapp.view.SettingsFragment"
+        android:label="SettingsFragment" />
 </navigation>
