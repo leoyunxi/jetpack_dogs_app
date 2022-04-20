@@ -127,7 +127,12 @@ public class DetailFragment extends Fragment {
                 break;
             }
             case R.id.action_share:{
-                Toast.makeText(getContext(), "Action share", Toast.LENGTH_SHORT).show();
+                Intent intent = new Intent(Intent.ACTION_SEND);
+                intent.setType("text/plain");
+                intent.putExtra(Intent.EXTRA_SUBJECT, "Check out this dog breed");
+                intent.putExtra(Intent.EXTRA_TEXT, currentDog.dogBreed + " bred for " + currentDog.bredFor);
+                intent.putExtra(Intent.EXTRA_STREAM, currentDog.imageUrl);
+                startActivity(Intent.createChooser(intent, "Share with"));
                 break;
             }
         }
