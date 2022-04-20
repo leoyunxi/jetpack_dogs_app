@@ -47,6 +47,7 @@ public class DetailFragment extends Fragment {
     private DetailViewModel viewModel;
     private int dogUuid;
     private FragmentDetailBinding detailBinding;
+    private Boolean sendSmsStarted = false;
 
     public DetailFragment() {
     }
@@ -113,7 +114,8 @@ public class DetailFragment extends Fragment {
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
         switch (item.getItemId()){
             case R.id.action_send_sms:{
-                Toast.makeText(getContext(), "Action send sms", Toast.LENGTH_SHORT).show();
+                sendSmsStarted = true;
+                ((MainActivity) getActivity()).checkSmsPermission();
                 break;
             }
             case R.id.action_share:{
@@ -123,5 +125,10 @@ public class DetailFragment extends Fragment {
         }
 
         return super.onOptionsItemSelected(item);
+    }
+
+
+    public void onPermissionResult(Boolean permissionGranted) {
+        //TDDO
     }
 }
