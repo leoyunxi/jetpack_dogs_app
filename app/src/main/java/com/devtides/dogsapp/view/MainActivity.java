@@ -44,6 +44,7 @@ public class MainActivity extends AppCompatActivity {
     public void checkSmsPermission() {
         if(ContextCompat.checkSelfPermission(this, Manifest.permission.SEND_SMS) != PackageManager.PERMISSION_GRANTED) {
             if(ActivityCompat.shouldShowRequestPermissionRationale(this, Manifest.permission.SEND_SMS)) {
+                // if the app has requested this permission previously and the user denied the request
                 new AlertDialog.Builder(this)
                         .setTitle("Send SMS permission")
                         .setMessage("This app requires access to send an SMS")
@@ -55,9 +56,12 @@ public class MainActivity extends AppCompatActivity {
                         }))
                         .show();
             } else {
+                // first time or
+                // If the user turned down the permission request in the past and chose the Don't ask again option in the permission request system dialog
                 requestSmsPermission();
             }
         } else {
+            // already granted
             notifyDetailFragment(true);
         }
     }
@@ -75,6 +79,8 @@ public class MainActivity extends AppCompatActivity {
                 if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
                     notifyDetailFragment(true);
                 } else {
+                    // denied or
+                    // denied and dont ask again
                     notifyDetailFragment(false);
                 }
                 break;
